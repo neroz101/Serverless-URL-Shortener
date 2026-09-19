@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serverless URL Shortener</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🔗 URL Shortener</h1>
+
+        <p>Enter a long URL and create a short link.</p>
+
+        <form id="urlForm">
+
+            <input
+                type="url"
+                id="urlInput"
+                placeholder="https://anthonymuokem.com/very-long-url"
+                required
+            >
+
+            <button type="submit">
+                Shorten URL
+            </button>
+
+        </form>
+
+        <div id="result" class="result"></div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
