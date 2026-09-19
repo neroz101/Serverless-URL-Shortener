@@ -1,6 +1,6 @@
 # Serverless URL Shortener
 
-A fully serverless URL shortener built on AWS, using S3 + CloudFront for the frontend, API Gateway + Lambda for the backend logic, DynamoDB for storage, and CloudWatch for monitoring.
+A fully serverless URL shortener built on AWS, using S3 + CloudFront for the frontend, API Gateway + Lambda for the backend logic, DynamoDB for storage and CloudWatch for monitoring.
 
 ## Architecture
 
@@ -76,26 +76,26 @@ All functions run on **Python 3.13** and use scoped inline IAM policies limited 
 
 ## How It Works
 
-1. User visits the site via the CloudFront distribution domain name.
+1. When user visits the site via the CloudFront distribution domain name.
 2. User enters a long URL (e.g. `facebook.com`) into the input field.
 3. `script.js` sends a `POST` request to the API Gateway invoke URL.
-4. `CreateShortUrlFunction` generates a short code, writes `{shortCode, originalUrl, clicks: 0}` to DynamoDB, and returns the short URL.
-5. Visiting `{invoke-url}/{shortCode}` triggers `RedirectUrlFunction`, which looks up the original URL, increments the `clicks` counter, and redirects the browser.
+4. `CreateShortUrlFunction` generates a short code, writes `{shortCode, originalUrl, clicks: 0}` to DynamoDB and returns the short URL.
+5. Visiting `{invoke-url}/{shortCode}` triggers `RedirectUrlFunction`, which looks up the original URL, increments the `clicks` counter and redirects the browser.
 6. Visiting `{invoke-url}/stats/{shortCode}` triggers `GetUrlStatsFunction`, which returns the current click count and original URL as JSON.
 
 ## Setup Summary
 
-1. Create an S3 bucket and upload `index.html`, `style.css`, `script.js`.
-2. Create a CloudFront distribution pointing at the bucket, with `index.html` as the default root object.
-3. Create a DynamoDB table (`URLMappings`) with `shortCode` as the partition key.
-4. Create `CreateShortUrlFunction` (Python 3.13) with an inline IAM policy for `PutItem`, deploy, and test.
-5. Create an API Gateway REST API, add a `POST` method integrated with `CreateShortUrlFunction`.
-6. Create `RedirectUrlFunction` with an inline policy for `GetItem`, add a `GET` route in API Gateway integrated with it.
-7. Enable CORS on the API (GET, POST, Content-Type header, `Access-Control-Allow-Origin: *`).
-8. Update `script.js` with the invoke URL, and invalidate the CloudFront cache to deploy frontend changes.
-9. Add `UpdateItem` permission to `RedirectUrlFunction` to increment click counts on redirect.
+1. I created an S3 bucket and upload `index.html`, `style.css`, `script.js`.
+2. I created a CloudFront distribution pointing at the bucket, with `index.html` as the default root object.
+3. I created a DynamoDB table (`URLMappings`) with `shortCode` as the partition key.
+4. I created `CreateShortUrlFunction` (Python 3.13) with an inline IAM policy for `PutItem`, deploy, and test.
+5. I created an API Gateway REST API, add a `POST` method integrated with `CreateShortUrlFunction`.
+6. I created `RedirectUrlFunction` with an inline policy for `GetItem`, add a `GET` route in API Gateway integrated with it.
+7. I enabled CORS on the API (GET, POST, Content-Type header, `Access-Control-Allow-Origin: *`).
+8. I updated `script.js` with the invoke URL and invalidate the CloudFront cache to deploy frontend changes.
+9. I added `UpdateItem` permission to `RedirectUrlFunction` to increment click counts on redirect.
 10. Create `GetUrlStatsFunction` with a `GetItem` policy and a `GET /stats/{shortcode}` route.
-11. Set up CloudWatch alarms and a dashboard to monitor Lambda errors across all three functions.
+11. Then i set up CloudWatch alarms and a dashboard to monitor Lambda errors across all three functions.
 
 ## Tech Stack
 
