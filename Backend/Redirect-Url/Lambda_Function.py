@@ -36,6 +36,18 @@ def lambda_handler(event, context):
 
     original_url = response["Item"]["originalUrl"]
 
+    # Increment click count
+    table.update_item(
+        Key={
+            "shortCode": short_code
+        },
+        UpdateExpression="SET clicks = if_not_exists(clicks, :zero) + :one",
+        ExpressionAttributeValues={
+            ":zero": 0,
+            ":one": 1
+        }
+    )
+
     # Redirect the user
     return {
         "statusCode": 302,
