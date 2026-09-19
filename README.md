@@ -31,6 +31,7 @@ CloudWatch
 Region: Europe (Spain) — eu-south-2
 
 Components
+
 1. Frontend (S3 + CloudFront)
 S3 Bucket: serverless-url-shorterner-tony
 Hosts index.html, style.css and script.js
@@ -39,12 +40,14 @@ CloudFront Distribution: URLShortnerCloudF
 Default root object set to index.html
 Serves the static site over HTTPS from the distribution domain name
 Cache invalidations are run after frontend updates to reflect changes immediately
+
 2. Database (DynamoDB)
 Table: URLMappings
 Attributes:
 shortCode (String) — partition key
 originalUrl (String) — the full/long URL(https://www.facebook.com)
 clicks (Number) — click counter, incremented on each redirect
+
 3. Backend (Lambda + API Gateway)
 Lambda Function	Purpose	IAM Policy	DynamoDB Action
 CreateShortUrlFunction	Generates a short code and stores the mapping	URLShortnerDynamoDBWrite	PutItem
@@ -72,6 +75,7 @@ script.js sends a POST request to the API Gateway invoke URL.
 CreateShortUrlFunction generates a short code, writes {shortCode, originalUrl, clicks: 0} to DynamoDB, and returns the short URL.
 Visiting {invoke-url}/{shortCode} triggers RedirectUrlFunction, which looks up the original URL, increments the clicks counter and redirects the browser.
 Visiting {invoke-url}/stats/{shortCode} triggers GetUrlStatsFunction, which returns the current click count and original URL as JSON.
+
 Setup Summary
 I created an S3 bucket and upload index.html, style.css, script.js.
 I created a CloudFront distribution pointing at the bucket, with index.html as the default root object.
